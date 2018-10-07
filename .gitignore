@@ -1,0 +1,7 @@
+*.log
+.DS_Store
+/coverage
+/node_modules
+BUILD_ID
+dist
+stats.json
