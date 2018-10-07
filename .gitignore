@@ -1,7 +1,9 @@
 *.log
 .DS_Store
 /coverage
+/config/dev.exs
 /node_modules
+/deps
 BUILD_ID
 dist
 stats.json
