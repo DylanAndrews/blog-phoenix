@@ -2,7 +2,7 @@ defmodule Phoenixblog.PostControllerTest do
   use Phoenixblog.ConnCase
 
   alias Phoenixblog.Post
-  @valid_attrs %{body: "some body", title: "some title"}
+  @valid_attrs %{email: "test@test.com", password: "test1234", password_confirmation: "test1234", username: "testuser"}
   @invalid_attrs %{}
 
   test "lists all entries on index", %{conn: conn} do

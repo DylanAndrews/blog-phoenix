@@ -2,7 +2,8 @@ defmodule Phoenixblog.UserControllerTest do
   use Phoenixblog.ConnCase
 
   alias Phoenixblog.User
-  @valid_attrs %{email: "some email", password_digest: "some password_digest", username: "some username"}
+  @valid_create_attrs %{email: "test@test.com", password: "test1234", password_confirmation: "test1234", username: "testuser"}
+  @valid_attrs %{email: "test@test.com", username: "testuser"}
   @invalid_attrs %{}
 
   test "lists all entries on index", %{conn: conn} do
@@ -16,9 +17,9 @@ defmodule Phoenixblog.UserControllerTest do
   end
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
-    conn = post conn, user_path(conn, :create), user: @valid_attrs
-    user = Repo.get_by!(User, @valid_attrs)
-    assert redirected_to(conn) == user_path(conn, :show, user.id)
+    conn = post conn, user_path(conn, :create), user: @valid_create_attrs
+    assert redirected_to(conn) == user_path(conn, :index)
+    assert Repo.get_by(User, @valid_attrs)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
@@ -46,7 +47,7 @@ defmodule Phoenixblog.UserControllerTest do
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn} do
     user = Repo.insert! %User{}
-    conn = put conn, user_path(conn, :update, user), user: @valid_attrs
+    conn = put conn, user_path(conn, :update, user), user: @valid_create_attrs
     assert redirected_to(conn) == user_path(conn, :show, user)
     assert Repo.get_by(User, @valid_attrs)
   end

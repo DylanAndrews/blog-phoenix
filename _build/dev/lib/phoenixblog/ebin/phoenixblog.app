@@ -1,5 +1,5 @@
 {application,phoenixblog,
-             [{applications,[kernel,stdlib,elixir,logger,gettext,
+             [{applications,[kernel,stdlib,elixir,logger,gettext,comeonin,
                              phoenix_pubsub,cowboy,phoenix_html,phoenix,
                              phoenix_live_reload,postgrex,phoenix_ecto]},
               {description,"phoenixblog"},
