@@ -1,6 +1,7 @@
 *.log
 .DS_Store
 /coverage
+/_build
 /config/dev.exs
 /node_modules
 /deps
