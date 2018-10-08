@@ -6,7 +6,9 @@ defmodule Phoenixblog.Post do
     field :body, :string
 
     timestamps()
+    belongs_to :user, Phoenixblog.User
   end
+
 
   @doc """
   Builds a changeset based on the `struct` and `params`.

@@ -1,7 +1,7 @@
-defmodule Pxblog.LayoutViewTest do
-  use Pxblog.ConnCase, async: true
-  alias Pxblog.LayoutView
-  alias Pxblog.User
+defmodule Phoenixblog.LayoutViewTest do
+  use Phoenixblog.ConnCase, async: true
+  alias Phoenixblog.LayoutView
+  alias Phoenixblog.User
   setup do
     User.changeset(%User{}, %{username: "test", password: "test", password_confirmation: "test", email: "test@test.com"})
     |> Repo.insert

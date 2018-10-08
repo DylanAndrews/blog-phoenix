@@ -1,6 +1,6 @@
-defmodule Pxblog.SessionControllerTest do
-  use Pxblog.ConnCase
-  alias Pxblog.User
+defmodule Phoenixblog.SessionControllerTest do
+  use Phoenixblog.ConnCase
+  alias Phoenixblog.User
   setup do
     User.changeset(%User{}, %{username: "test", password: "test", password_confirmation: "test", email: "test@test.com"})
     |> Repo.insert
