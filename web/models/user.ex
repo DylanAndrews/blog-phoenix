@@ -33,9 +33,3 @@ defmodule Phoenixblog.User do
     end
   end
 end
-
-import Ecto.Query
-alias Phoenixblog.User
-alias Phoenixblog.Post
-alias Phoenixblog.Repo
-import Ecto
