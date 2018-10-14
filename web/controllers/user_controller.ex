@@ -1,3 +1,4 @@
+require IEx
 defmodule Phoenixblog.UserController do
   use Phoenixblog.Web, :controller
 

@@ -6,6 +6,7 @@ defmodule Phoenixblog.Role do
     field :admin, :boolean, default: false
 
     timestamps()
+    has_many :users, Phoenixblog.User
   end
 
   @doc """
