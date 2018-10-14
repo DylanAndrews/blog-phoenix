@@ -3,64 +3,97 @@ defmodule Phoenixblog.PostControllerTest do
 
   alias Phoenixblog.Post
   @valid_attrs %{email: "test@test.com", password: "test1234", password_confirmation: "test1234", username: "testuser"}
+  @post_valid_attrs %{title: "foo", body: "bar"}
   @invalid_attrs %{}
 
-  test "lists all entries on index", %{conn: conn} do
-    conn = get conn, (conn, :index)
+  alias Phoenixblog.User
+  setup do
+    {:ok, user} = create_user
+    conn = build_conn()
+    |> login_user(user)
+    {:ok, conn: conn, user: user}
+  end
+
+  defp create_user do
+    User.changeset(%User{}, %{email: "test@test.com", username: "test", password: "test", password_confirmation: "test"})
+    |> Repo.insert
+  end
+
+  defp build_post(user) do
+    changeset =
+      user
+      |> build_assoc(:posts)
+      |> Post.changeset(@post_valid_attrs)
+    Repo.insert!(changeset)
+  end
+
+  defp login_user(conn, user) do
+    post conn, session_path(conn, :create), user: %{username: user.username, password: user.password}
+  end
+
+  test "lists all entries on index", %{conn: conn, user: user} do
+    conn = get conn, user_post_path(conn, :index, user)
     assert html_response(conn, 200) =~ "Listing posts"
   end
 
-  test "renders form for new resources", %{conn: conn} do
-    conn = get conn, (conn, :new)
+  test "renders form for new resources", %{conn: conn, user: user} do
+    conn = get conn, user_post_path(conn, :new, user)
     assert html_response(conn, 200) =~ "New post"
   end
 
-  test "creates resource and redirects when data is valid", %{conn: conn} do
-    conn = post conn, (conn, :create), post: @valid_attrs
-    post = Repo.get_by!(Post, @valid_attrs)
-    assert redirected_to(conn) == (conn, :show, post.id)
+  test "creates resource and redirects when data is valid", %{conn: conn, user: user} do
+    conn = post conn, user_post_path(conn, :create, user), post: @post_valid_attrs
+    assert redirected_to(conn) == user_post_path(conn, :index, user)
+    assert Repo.get_by(assoc(user, :posts), @post_valid_attrs)
   end
 
-  test "does not create resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, (conn, :create), post: @invalid_attrs
+  test "does not create resource and renders errors when data is invalid", %{conn: conn, user: user} do
+    conn = post conn, user_post_path(conn, :create, user), post: @invalid_attrs
     assert html_response(conn, 200) =~ "New post"
   end
 
-  test "shows chosen resource", %{conn: conn} do
-    post = Repo.insert! %Post{}
-    conn = get conn, (conn, :show, post)
+  test "shows chosen resource", %{conn: conn, user: user} do
+    post = build_post(user)
+    conn = get conn, user_post_path(conn, :show, user, post)
     assert html_response(conn, 200) =~ "Show post"
   end
 
-  test "renders page not found when id is nonexistent", %{conn: conn} do
-    assert_error_sent 404, fn ->
-      get conn, (conn, :show, -1)
+  test "renders page not found when id is nonexistent", %{conn: conn, user: user} do
+    assert_raise Ecto.NoResultsError, fn ->
+      get conn, user_post_path(conn, :show, user, -1)
     end
   end
 
-  test "renders form for editing chosen resource", %{conn: conn} do
-    post = Repo.insert! %Post{}
-    conn = get conn, (conn, :edit, post)
+    test "renders form for editing chosen resource", %{conn: conn, user: user} do
+    post = build_post(user)
+    conn = get conn, user_post_path(conn, :edit, user, post)
     assert html_response(conn, 200) =~ "Edit post"
   end
 
-  test "updates chosen resource and redirects when data is valid", %{conn: conn} do
-    post = Repo.insert! %Post{}
-    conn = put conn, (conn, :update, post), post: @valid_attrs
-    assert redirected_to(conn) == (conn, :show, post)
-    assert Repo.get_by(Post, @valid_attrs)
+  test "updates chosen resource and redirects when data is valid", %{conn: conn, user: user} do
+    post = build_post(user)
+    conn = put conn, user_post_path(conn, :update, user, post), post: @post_valid_attrs
+    assert redirected_to(conn) == user_post_path(conn, :show, user, post)
+    assert Repo.get_by(Post, @post_valid_attrs)
   end
 
-  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    post = Repo.insert! %Post{}
-    conn = put conn, (conn, :update, post), post: @invalid_attrs
+  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn, user: user} do
+    post = build_post(user)
+    conn = put conn, user_post_path(conn, :update, user, post), post: %{"body" => nil}
     assert html_response(conn, 200) =~ "Edit post"
   end
 
-  test "deletes chosen resource", %{conn: conn} do
-    post = Repo.insert! %Post{}
-    conn = delete conn, (conn, :delete, post)
-    assert redirected_to(conn) == (conn, :index)
+  test "deletes chosen resource", %{conn: conn, user: user} do
+    post = build_post(user)
+    conn = delete conn, user_post_path(conn, :delete, user, post)
+    assert redirected_to(conn) == user_post_path(conn, :index, user)
     refute Repo.get(Post, post.id)
+  end
+
+  test "redirects when the specified user does not exist", %{conn: conn} do
+    conn = get conn, user_post_path(conn, :index, -1)
+    assert get_flash(conn, :error) == "Invalid user!"
+    assert redirected_to(conn) == page_path(conn, :index)
+    assert conn.halted
   end
 end
