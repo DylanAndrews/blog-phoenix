@@ -89,7 +89,7 @@ defmodule Phoenixblog.PostControllerTest do
   end
 
   test "redirects when trying to delete a post for a different user", %{conn: conn, role: role, post: post} do
-    {:ok, other_user} = TestHelper.create_user(role, %{email: "test2@test.com", username: "test2", password: "test", password_confirmation: "test"})
+      {:ok, other_user} = TestHelper.create_user(role, %{email: "test2@test.com", username: "test2", password: "test", password_confirmation: "test"})
     conn = delete conn, user_post_path(conn, :delete, other_user, post)
     assert get_flash(conn, :error) == "You are not authorized to modify that post!"
     assert redirected_to(conn) == page_path(conn, :index)

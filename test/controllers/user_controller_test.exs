@@ -50,7 +50,7 @@ defmodule Phoenixblog.UserControllerTest do
   test "creates resource and redirects when data is valid", %{conn: conn, user_role: user_role, admin_user: admin_user} do
     conn = login_user(conn, admin_user)
     conn = post conn, user_path(conn, :create), user: valid_create_attrs(user_role)
-    assert redirected_to(conn) == user_path(conn, :show, Repo.get_by(User, @valid_attrs))
+    assert redirected_to(conn) == user_path(conn, :index)
     assert Repo.get_by(User, @valid_attrs)
   end
 
