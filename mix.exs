@@ -33,6 +33,7 @@ defmodule Phoenixblog.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:earmark, "~> 1.0.1"},
       {:phoenix, "~> 1.3.3"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
