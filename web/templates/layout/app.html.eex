@@ -8,25 +8,45 @@
     <meta name="author" content="">
 
     <title>Hello Phoenixblog!</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <!-- <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
 
   <body>
     <div class="container">
       <header class="header">
         <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-            <li>
-              <%= if user = current_user(@conn) do %>
-                Logged in as
-                <strong><%= user.username %></strong>
-                <br>
-                <%= link "Log out", to: session_path(@conn, :delete, user.id), method: :delete %>
-              <% else %>
-                <%= link "Log in", to: session_path(@conn, :new) %>
-              <% end %>
-            </li>
-          </ul>
+        </nav>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+        	<div class="container">
+        		<div class="navbar-header">
+        			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        				<span class="sr-only">Toggle navigation</span>
+        				<span class="icon-bar"></span>
+        				<span class="icon-bar"></span>
+        				<span class="icon-bar"></span>
+        			</button>
+        			<a class="navbar-brand" href="#">Balance Web Development</a>
+        		</div>
+        		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        			<ul class="nav navbar-nav navbar-right">
+        				<li><a href="/users/3/posts">About</a></li>
+                <ul class="nav nav-pills pull-right">
+                  <li>
+                    <%= if user = current_user(@conn) do %>
+                      Logged in as
+                      <strong><%= user.username %></strong>
+                      <br>
+                      <%= link "Log out", to: session_path(@conn, :delete, user.id), method: :delete %>
+                    <% else %>
+                      <%= link "Log in", to: session_path(@conn, :new) %>
+                    <% end %>
+                  </li>
+                </ul>
+        				<li><a href="#">Contact</a></li>
+        			</ul>
+        		</div>
+        	</div>
         </nav>
         <span class="logo"></span>
       </header>
